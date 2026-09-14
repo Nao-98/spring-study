@@ -1,0 +1,8 @@
+### 新しいペットの登録テスト
+POST http://localhost:8080/pets
+Content-Type: application/json
+
+{
+    "name": "きなこ",
+    "breed": "ゴールデンレトリバー"
+}
