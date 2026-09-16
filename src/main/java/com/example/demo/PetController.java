@@ -7,6 +7,8 @@ import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.web.bind.annotation.PutMapping;
+import org.springframework.web.bind.annotation.DeleteMapping;
 
 @RestController
 public class PetController {
@@ -30,5 +32,16 @@ public class PetController {
     public String addPet(@RequestBody PetRequest request) {
         // 実際の検索処理はServiceにお任せ
         return petService.registerPet(request.getName(), request.getBreed());
+    }
+
+    @PutMapping("/pets/{name}")
+    public String updatePet(@PathVariable String name, @RequestBody PetRequest request) {
+        // 名前はURLから、新しい品種はJSONデータから受け取ってServiceへ渡す
+        return petService.updatePet(name, request.getBreed());
+    }
+
+    @DeleteMapping("/pets/{name}")
+    public String deletePet(@PathVariable String name) {
+        return petService.deletePet(name);
     }
 }

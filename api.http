@@ -1,4 +1,7 @@
-### 新しいペットの登録テスト
+### 1. 最初からいる「もふ」を検索 (GET)
+GET http://localhost:8080/pets/もふ
+
+### 2. 新しいペット「きなこ」を登録 (POST)
 POST http://localhost:8080/pets
 Content-Type: application/json
 
@@ -6,3 +9,23 @@ Content-Type: application/json
     "name": "きなこ",
     "breed": "ゴールデンレトリバー"
 }
+
+### 3. きなこが登録されたか検索 (GET)
+GET http://localhost:8080/pets/きなこ
+
+### 4. きなこの品種を更新 (PUT)
+PUT http://localhost:8080/pets/きなこ
+Content-Type: application/json
+
+{
+    "breed": "ラブラドールレトリバー"
+}
+
+### 5. きなこが更新されたか検索 (GET)
+GET http://localhost:8080/pets/きなこ
+
+### 6. きなこのデータを削除 (DELETE)
+DELETE http://localhost:8080/pets/きなこ
+
+### 7. 削除されたか検索してエラーを確認 (GET)
+GET http://localhost:8080/pets/きなこ
