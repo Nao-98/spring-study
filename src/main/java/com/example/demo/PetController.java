@@ -9,6 +9,7 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.DeleteMapping;
+import jakarta.validation.Valid;
 
 @RestController
 public class PetController {
@@ -29,13 +30,13 @@ public class PetController {
 
     // 新しいペットを登録するPOSTメソッド
     @PostMapping("/pets")
-    public String addPet(@RequestBody PetRequest request) {
+    public String addPet(@Valid @RequestBody PetRequest request) {
         // 実際の検索処理はServiceにお任せ
         return petService.registerPet(request.getName(), request.getBreed());
     }
 
     @PutMapping("/pets/{name}")
-    public String updatePet(@PathVariable String name, @RequestBody PetRequest request) {
+    public String updatePet(@PathVariable String name, @Valid @RequestBody PetRequest request) {
         // 名前はURLから、新しい品種はJSONデータから受け取ってServiceへ渡す
         return petService.updatePet(name, request.getBreed());
     }

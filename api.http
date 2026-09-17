@@ -29,3 +29,12 @@ DELETE http://localhost:8080/pets/きなこ
 
 ### 7. 削除されたか検索してエラーを確認 (GET)
 GET http://localhost:8080/pets/きなこ
+
+### 8. 空っぽの名前で登録してみる（バリデーションのテスト）
+POST http://localhost:8080/pets
+Content-Type: application/json
+
+{
+    "name": "ぽち",
+    "breed": ""
+}
