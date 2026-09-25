@@ -38,3 +38,7 @@ Content-Type: application/json
     "name": "",
     "breed": "柴犬"
 }
+
+### CORS設定のテスト（Next.jsからのアクセスを偽装）
+GET http://localhost:8080/pets/たま
+Origin: http://localhost:3000
