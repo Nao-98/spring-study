@@ -17,16 +17,9 @@ public class PetService {
     }
 
     // 🐾 1. 全件取得（GET）
-    public Map<String, String> getAllPets() {
+    public List<Pet> getAllPets() {
         // ① 魔法のメソッド findAll() でDBから全件取得！
-        List<Pet> pets = petRepository.findAll();
-        
-        // ② Controllerが無傷で済むように、DBのデータを今までと同じMap（辞書）の形に詰め直して返す
-        Map<String, String> petMap = new HashMap<>();
-        for (Pet pet : pets) {
-            petMap.put(pet.getName(), pet.getBreed());
-        }
-        return petMap;
+        return petRepository.findAll();
     }
 
     // 🐾 2. 登録（POST）
@@ -66,5 +59,10 @@ public class PetService {
             return pet.getBreed();
         }
         return name + "は見つかりませんでした。";
+    }
+
+    // ▼ 曖昧検索のメソッドを追加
+    public List<Pet> searchPets(String keyword) {
+        return petRepository.findByNameContaining(keyword);
     }
 }
