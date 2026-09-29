@@ -12,6 +12,8 @@ import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import jakarta.validation.Valid;
 import java.util.List;
+import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.validation.annotation.Validated;
 
 @RestController
 public class PetController {
@@ -30,13 +32,13 @@ public class PetController {
         return petService.getAllPets();
     }
 
-    // 新しいペットを登録するPOSTメソッド
-    @PostMapping("/pets")
-    public String addPet(@Valid @RequestBody PetRequest request) {
-        // 実際の検索処理はServiceにお任せ
+    // 新しいペットを登録するPOSTメソッド(DTOとバリデーションを利用)
+    @PostMapping
+    public String registerPet(@Validated @RequestBody PetRequest request) {
+        // DTO（PetRequest）から名前と品種を取り出して、Serviceに渡す
         return petService.registerPet(request.getName(), request.getBreed());
     }
-
+    
     @PutMapping("/pets/{name}")
     public String updatePet(@PathVariable String name, @Valid @RequestBody PetRequest request) {
         // 名前はURLから、新しい品種はJSONデータから受け取ってServiceへ渡す
