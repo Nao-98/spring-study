@@ -1,15 +1,25 @@
 package com.example.demo;
 
-import java.util.HashMap;
 import java.util.List;
-import java.util.Map;
 
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
+
+// ロギング用の部品をインポート
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
+// 時間を測るための部品をインポート
+import org.springframework.util.StopWatch;
 
 @Service
+@Transactional  // クラスにつけると、この中にあるすべてのメソッドがトランザクション管理される
 public class PetService {
 
     private final PetRepository petRepository;
+
+    // ログを出力するための「記録係(logger)」を準備
+    private static final Logger logger = LoggerFactory.getLogger(PetService.class);
 
     // 魔法の杖（PetRepository）を持たせる（DI）
     public PetService(PetRepository petRepository) {
@@ -24,9 +34,30 @@ public class PetService {
 
     // 🐾 2. 登録（POST）
     public String registerPet(String name, String breed) {
-        // 魔法のメソッド save() でDBに保存！
-        petRepository.save(new Pet(name, breed));
-        return name + "（" + breed + "）を登録しました！";
+        // ストップウォッチを用意して計測スタート
+        StopWatch stopWatch = new StopWatch();
+        stopWatch.start();
+
+        // 処理が始まったことを記録。{} の部分に変数の中身が埋め込まれます。
+        logger.info("🐾 新しいペットの登録処理を開始します。リクエストデータ - 名前: {}, 品種: {}", name, breed);
+        
+        try {
+            // 魔法のメソッド save() でDBに保存！
+            petRepository.save(new Pet(name, breed));
+
+            // 処理が終わったのでストップウォッチを止める
+            stopWatch.stop();
+
+            // 成功したこと＆かかった時間を取得して記録
+            logger.info("✅ DB保存完了 (名前: {}) - 処理時間: {} ms", name, stopWatch.getTotalTimeMillis());
+
+            return name + "（" + breed + "）を登録しました！";
+        } catch (Exception e) {
+            // 万が一エラーが起きたら、詳細なエラー内容(e)とともに記録
+            logger.error("❌ DB保存エラー (名前: {} - 失敗までの時間: {} ms", name, stopWatch.getTotalTimeMillis(), e);
+            throw e;  // エラー自体は Spring Boot に報告して、トランザクションのロールバックを発動させる
+        }
+
     }
 
     // 🐾 3. 更新（PUT）
