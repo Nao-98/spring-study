@@ -1,7 +1,6 @@
 package com.example.demo;
 
-// import java.util.HashMap;
-// import java.util.Map;
+import org.springframework.web.bind.annotation.CrossOrigin;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RestController;
@@ -12,10 +11,11 @@ import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import jakarta.validation.Valid;
 import java.util.List;
-import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.validation.annotation.Validated;
 
 @RestController
+//「http://localhost:3000」からのアクセスを特別に許可する許可証
+@CrossOrigin(origins = "http://localhost:3000")
 public class PetController {
 
     // 厨房(Service)を用意する
@@ -38,7 +38,7 @@ public class PetController {
         // DTO（PetRequest）から名前と品種を取り出して、Serviceに渡す
         return petService.registerPet(request.getName(), request.getBreed());
     }
-    
+
     @PutMapping("/pets/{name}")
     public String updatePet(@PathVariable String name, @Valid @RequestBody PetRequest request) {
         // 名前はURLから、新しい品種はJSONデータから受け取ってServiceへ渡す

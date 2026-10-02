@@ -42,6 +42,11 @@ public class PetService {
         logger.info("🐾 新しいペットの登録処理を開始します。リクエストデータ - 名前: {}, 品種: {}", name, breed);
         
         try {
+            // すでに同じ名前がDBにいるかチェック
+            if (petRepository.existsById(name)) {
+                // すでにいる(true)なら強制的にエラーを発生させて保存させない
+                throw new IllegalArgumentException("すでに登録されている名前です: " + name);
+            }
             // 魔法のメソッド save() でDBに保存！
             petRepository.save(new Pet(name, breed));
 
@@ -51,7 +56,7 @@ public class PetService {
             // 成功したこと＆かかった時間を取得して記録
             logger.info("✅ DB保存完了 (名前: {}) - 処理時間: {} ms", name, stopWatch.getTotalTimeMillis());
 
-            return name + "（" + breed + "）を登録しました！";
+            return name + "(" + breed + ")を登録しました！";
         } catch (Exception e) {
             // 万が一エラーが起きたら、詳細なエラー内容(e)とともに記録
             logger.error("❌ DB保存エラー (名前: {} - 失敗までの時間: {} ms", name, stopWatch.getTotalTimeMillis(), e);
