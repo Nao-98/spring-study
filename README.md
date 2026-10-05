@@ -200,4 +200,23 @@ Spring Bootの習得を目指します。
 
 ### 2026-10-05
 * **やったこと**: 
+  * *JPAによるエンティティリレーション（1対多）の設計完了確認*:
+    * Owner（飼い主）と Pet（ペット）間における、@OneToMany および @ManyToOne によるテーブル結合の設計が完了していることを確認。
+    * JSON出力時の無限ループを防ぐ @JsonIgnore の適切な配置を確認。
+  * *Spring Security ＋ JWT による認証機能の構築*:
+    * spring-boot-starter-security と java-jwt を導入し、デフォルトの強力なアクセス制限（401/403エラー）を確認。
+    * SecurityConfig を作成し、Swagger（/swagger-ui/**）とログイン窓口（/login）のみを公開（permitAll）し、それ以外を要認証（authenticated）とするアクセス制御を実装。
+    * LoginController にて、固定のID/パスワードによる認証と、秘密鍵（HMAC256）を用いたJWT（JSON Web Token）の発行処理を実装。
+    * JwtFilter を作成し、HTTPリクエストヘッダーの Bearer トークンを検証・解析して、Spring Securityのコンテキストに認証情報をセットする関所（フィルター）を構築。
+    * SwaggerConfig を更新し、Swagger UI上からJWTトークンを送信（Authorize）できるテスト環境を整備。
+* **気づき・他言語との違い**:
+  * *Spring Securityの強力なデフォルト設定*:
+    * ライブラリを導入しただけで、API全体が自動的にブロックされる（絶対防御が働く）点に驚いた。開発者が「どこを開けるか」をホワイトリスト形式で明示的に設定していくアプローチが、非常に堅牢だと感じた。
+  * *フィルター（Filter）の概念*:
+    * リクエストがAPI（Controller）に到達する「前」に、JwtFilter のようなフィルターチェーンを挟み込んで全通信を検査するアーキテクチャが、セキュリティにおいて非常に合理的で強力であることを理解した。
+  * *VSCode（エディタ環境）のトラブルシューティング*:
+    * 開発中に「Java Language ServerのOutOfMemory（メモリ不足）」エラーに遭遇したが、これはコードのバグではなくエディタ側の裏側プログラムの悲鳴であることを学んだ。VSCodeの再起動などで速やかに解決できるノウハウを得た。
+
+### 2026-10-06
+* **やったこと**: 
   * 
