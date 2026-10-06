@@ -13,6 +13,10 @@ public class PetRequest {
     @NotBlank(message = "品種は必須です")
     private String breed;
 
+    // 飼い主の名前を受け取る箱と見張りを立たせる
+    @NotBlank(message = "飼い主の名前は必須です")
+    private String ownerName;
+
     // Spring BootがJSONの中身をsetし、プログラム側で取り出す(Get)ためにGetterとSetterの両方が必要
     public String getName() {
         return name;   
@@ -28,5 +32,13 @@ public class PetRequest {
 
     public void setBreed(String breed) {
         this.breed = breed;
+    }
+
+    public String getOwnerName() {
+        return ownerName;
+    }
+
+    public void setOwnerName(String ownerName) {
+        this.ownerName = ownerName;
     }
 }

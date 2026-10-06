@@ -33,10 +33,10 @@ public class PetController {
     }
 
     // 新しいペットを登録するPOSTメソッド(DTOとバリデーションを利用)
-    @PostMapping
-    public String registerPet(@Validated @RequestBody PetRequest request) {
+    @PostMapping("/pets")
+    public String registerPet(@RequestBody @Valid PetRequest request) {
         // DTO（PetRequest）から名前と品種を取り出して、Serviceに渡す
-        return petService.registerPet(request.getName(), request.getBreed());
+        return petService.registerPet(request.getName(), request.getBreed(), request.getOwnerName());
     }
 
     @PutMapping("/pets/{name}")

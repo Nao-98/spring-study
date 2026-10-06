@@ -17,13 +17,15 @@ import org.springframework.util.StopWatch;
 public class PetService {
 
     private final PetRepository petRepository;
+    private final OwnerRepository ownerRepository;
 
     // ログを出力するための「記録係(logger)」を準備
     private static final Logger logger = LoggerFactory.getLogger(PetService.class);
 
     // 魔法の杖（PetRepository）を持たせる（DI）
-    public PetService(PetRepository petRepository) {
+    public PetService(PetRepository petRepository, OwnerRepository ownerRepository) {
         this.petRepository = petRepository;
+        this.ownerRepository = ownerRepository;
     }
 
     // 🐾 1. 全件取得（GET）
@@ -33,7 +35,7 @@ public class PetService {
     }
 
     // 🐾 2. 登録（POST）
-    public String registerPet(String name, String breed) {
+    public String registerPet(String name, String breed, String ownerName) {
         // ストップウォッチを用意して計測スタート
         StopWatch stopWatch = new StopWatch();
         stopWatch.start();
@@ -47,8 +49,17 @@ public class PetService {
                 // すでにいる(true)なら強制的にエラーを発生させて保存させない
                 throw new IllegalArgumentException("すでに登録されている名前です: " + name);
             }
+
+            // 紐づける飼い主をDBから探し出す(いなければエラー)
+            Owner owner = ownerRepository.findById(ownerName)
+                    .orElseThrow(() -> new IllegalArgumentException("飼い主が見つかりません: " + ownerName));
+
+            // ペットを作成し、飼い主をセット(紐づけ)する！
+            Pet pet = new Pet(name, breed);
+            pet.setOwner(owner);
+
             // 魔法のメソッド save() でDBに保存！
-            petRepository.save(new Pet(name, breed));
+            petRepository.save(pet);
 
             // 処理が終わったのでストップウォッチを止める
             stopWatch.stop();

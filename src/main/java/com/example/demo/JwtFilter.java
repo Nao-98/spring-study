@@ -25,6 +25,9 @@ public class JwtFilter extends OncePerRequestFilter {
         // リクエストのヘッダーから「Authorization」という項目を取り出す
         String header = request.getHeader("Authorization");
 
+        // サーバーの画面(ターミナル)に受診した鍵を表示させる
+        System.out.println("★受信した鍵: " + header);
+        
         // 「Bearer (トークン)」という形で送られてきているかチェック
         if (header != null && header.startsWith("Bearer ")) {
             String token = header.substring(7); // "Bearer " の後ろの長い文字列だけを切り出す

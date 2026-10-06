@@ -21,6 +21,9 @@ public class PetServiceTest {
     @Mock
     private PetRepository petRepository;
 
+    @Mock
+    private OwnerRepository ownerRepository;
+
     // その影武者を注入(Inject)した、本物の Service を用意する
     @InjectMocks
     private PetService petService;
@@ -28,12 +31,14 @@ public class PetServiceTest {
     // 1つ目のテスト
     @Test
     public void ペットの登録が成功し正しいメッセージが返るかをテストする() {
+        // 飼い主を探されたら、適当な Owner を返すフリをする
+        when(ownerRepository.findById("荒木")).thenReturn(java.util.Optional.of(new Owner("荒木")));
         // 準備：影武者に「save() と言われたら、とりあえずOKを返してね」という台本を渡す
         // (どんなPetクラスが来ても、たま/スコティッシュフォールド を返すフリをします)
         when(petRepository.save(any(Pet.class))).thenReturn(new Pet("たま", "スコティッシュフォールド"));
 
         // 実行：影武者がセットされた Service を呼び出す！本物のDBには一切アクセスしない
-        String result = petService.registerPet("たま", "スコティッシュフォールド");
+        String result = petService.registerPet("たま", "スコティッシュフォールド", "荒木");
     
         // 検証1：期待通りのメッセージが返ってきたか？
         assertEquals("たま(スコティッシュフォールド)を登録しました！", result);
@@ -51,7 +56,7 @@ public class PetServiceTest {
 
         // 実行&検証：登録しようとするとエラー(IllegalArgumentException)が飛んでくるはず！と待ち構える
         IllegalArgumentException exception = assertThrows(IllegalArgumentException.class, () -> {
-            petService.registerPet("たま", "スコティッシュフォールド");
+            petService.registerPet("たま", "スコティッシュフォールド", "荒木");
         });
 
         // 検証1：狙い通りのエラーメッセージが返ってきたか？
