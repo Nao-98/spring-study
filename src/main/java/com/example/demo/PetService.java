@@ -87,6 +87,27 @@ public class PetService {
         return name + "は見つかりませんでした。";
     }
 
+    // ペットの情報を更新するメソッド
+    @Transactional
+    public Pet updatePet(String name, PetRequest request) {
+        
+        // 1. 更新対象のペットがDBにいるか探す（いなければ例外を投げて400エラーにする）
+        Pet pet = petRepository.findById(name)
+                .orElseThrow(() -> new IllegalArgumentException("そのペットは見つかりません: " + name));
+
+        // 2. 品種を上書きする
+        pet.setBreed(request.getBreed());
+
+        // 3. 新しい飼い主を探して上書きする
+        Owner newOwner = ownerRepository.findById(request.getOwnerName())
+                .orElseThrow(() -> new IllegalArgumentException("指定された飼い主が見つかりません: " + request.getOwnerName()));
+        
+        pet.setOwner(newOwner);
+
+        // 4. 上書きした状態で保存！
+        return petRepository.save(pet);
+    }
+
     // 🐾 4. 削除（DELETE）
     public String deletePet(String name) {
         if (petRepository.existsById(name)) {

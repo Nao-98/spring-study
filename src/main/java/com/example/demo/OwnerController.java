@@ -2,7 +2,9 @@ package com.example.demo;
 
 import java.util.List;
 
+import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
@@ -33,5 +35,20 @@ public class OwnerController {
     public List getAllOwners() {
         // JPAのリレーションにより、飼い主データの中に自動的にペットデータが入れ子になる
         return ownerRepository.findAll();
+    }
+
+    // 飼い主の削除（DELETE /owners/{name}）
+    // URLの一部（{name}）を変数として受け取るため @PathVariable を使う
+    @DeleteMapping("/{name}")
+    public String deleteOwner(@PathVariable String name) {
+        
+        // 1. 存在チェック
+        if (!ownerRepository.existsById(name)) {
+            throw new IllegalArgumentException("その飼い主は見つかりません: " + name);
+        }
+        // 2. 削除実行
+        ownerRepository.deleteById(name);
+        
+        return name + "さんのデータを削除しました！";
     }
 }

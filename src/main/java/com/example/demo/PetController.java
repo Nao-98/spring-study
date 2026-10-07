@@ -41,8 +41,8 @@ public class PetController {
 
     @PutMapping("/pets/{name}")
     public String updatePet(@PathVariable String name, @Valid @RequestBody PetRequest request) {
-        // 名前はURLから、新しい品種はJSONデータから受け取ってServiceへ渡す
-        return petService.updatePet(name, request.getBreed());
+        petService.updatePet(name, request);
+        return name + "の情報を更新し、新しい飼い主に紐づけました！";
     }
 
     @DeleteMapping("/pets/{name}")

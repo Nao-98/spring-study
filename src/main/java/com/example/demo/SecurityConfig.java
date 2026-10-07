@@ -28,6 +28,8 @@ public class SecurityConfig {
                 .requestMatchers("/swagger-ui/**", "/v3/api-docs/**", "/swagger-ui.html").permitAll()
                 // 後で作る「カードキー発行窓口（/login）」も誰でもアクセスできるように許可
                 .requestMatchers("/login").permitAll()
+                // 本当のエラー（404や400）を隠さずに表示する
+                .requestMatchers("/error").permitAll()
                 // これ以外の全てのリクエストは「認証（カードキー）が必要」
                 .anyRequest().authenticated()
             )

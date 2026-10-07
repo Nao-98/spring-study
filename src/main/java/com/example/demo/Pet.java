@@ -1,7 +1,9 @@
 package com.example.demo;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import jakarta.persistence.Entity;
 import jakarta.persistence.Id;
+import jakarta.persistence.JoinColumn;
 import jakarta.persistence.ManyToOne;
 
 // ▼【重要】「これはMySQLのテーブルになります！」という宣言
@@ -15,6 +17,8 @@ public class Pet {
 
     // 「複数のペットは1人の飼い主に所属するよ」という設定(多対1)
     @ManyToOne
+    @JoinColumn(name = "owner_name")
+    @JsonIgnore
     private Owner owner;
 
     // --- JPAのルールで、空のコンストラクタ（初期化メソッド）が必須です ---
