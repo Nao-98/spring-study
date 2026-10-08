@@ -1,13 +1,20 @@
 package com.example.demo;
 
-import com.fasterxml.jackson.annotation.JsonIgnore;
+import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
+import jakarta.persistence.EntityListeners;
 import jakarta.persistence.Id;
-import jakarta.persistence.JoinColumn;
 import jakarta.persistence.ManyToOne;
+import jakarta.persistence.JoinColumn;
+import org.springframework.data.annotation.CreatedDate;
+import org.springframework.data.annotation.LastModifiedDate;
+import org.springframework.data.jpa.domain.support.AuditingEntityListener;
+import com.fasterxml.jackson.annotation.JsonIgnore;
+import java.time.LocalDateTime;
 
 // ▼【重要】「これはMySQLのテーブルになります！」という宣言
 @Entity
+@EntityListeners(AuditingEntityListener.class)
 public class Pet {
 
     // ▼【重要】「これが主キー（データを特定する一意のID）です！」という宣言
@@ -20,6 +27,13 @@ public class Pet {
     @JoinColumn(name = "owner_name")
     @JsonIgnore
     private Owner owner;
+
+    @CreatedDate
+    @Column(updatable = false)
+    private LocalDateTime createdAt;
+
+    @LastModifiedDate
+    private LocalDateTime updatedAt;
 
     // --- JPAのルールで、空のコンストラクタ（初期化メソッド）が必須です ---
     public Pet() {
@@ -40,4 +54,7 @@ public class Pet {
     // Owner用のGetterとSetter
     public Owner getOwner() { return owner; }
     public void setOwner(Owner owner) { this.owner = owner; }
+
+    public LocalDateTime getCreatedAt() { return createdAt; }
+    public LocalDateTime getUpdatedAt() { return updatedAt; }
 }

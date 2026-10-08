@@ -3,10 +3,17 @@ package com.example.demo;
 import jakarta.persistence.Entity;
 import jakarta.persistence.Id;
 import jakarta.persistence.OneToMany;
-import java.util.List;
 import jakarta.persistence.PreRemove;
+import jakarta.persistence.Column;
+import jakarta.persistence.EntityListeners;
+import org.springframework.data.annotation.CreatedDate;
+import org.springframework.data.annotation.LastModifiedDate;
+import org.springframework.data.jpa.domain.support.AuditingEntityListener;
+import java.time.LocalDateTime;
+import java.util.List;
 
 @Entity
+@EntityListeners(AuditingEntityListener.class)
 public class Owner {
 
     @Id
@@ -15,6 +22,13 @@ public class Owner {
     // ▼ 「1人の飼い主に対し、複数のペットがいるよ」という設定（1対多）
     @OneToMany(mappedBy = "owner")
     private List<Pet> pets;
+
+    @CreatedDate
+    @Column(updatable = false)
+    private LocalDateTime createdAt;
+
+    @LastModifiedDate
+    private LocalDateTime updatedAt;
 
     // 空のコンストラクタ（Spring Bootのお約束）
     public Owner() {}
@@ -30,7 +44,10 @@ public class Owner {
     public List<Pet> getPets() { return pets; }
     public void setPets(List<Pet> pets) { this.pets = pets; }
 
-    // ★追加：「この飼い主データがDBから削除される直前」に自動で呼ばれる魔法
+    public LocalDateTime getCreatedAt() { return createdAt; }
+    public LocalDateTime getUpdatedAt() { return updatedAt; }
+
+    //「この飼い主データがDBから削除される直前」に自動で呼ばれる魔法
     @PreRemove
     public void preRemove() {
         // もし紐づいているペットがいれば...
